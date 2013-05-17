@@ -1,0 +1,349 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		EEE4A07A5D935F7C3D9E1323 /* JewelView.m in Sources */ = {isa = PBXBuildFile; fileRef = EEE4A54AFC92954A48A879AD /* JewelView.m */; };
+		EEE4A14FBD487DB19F6A1FF7 /* MainStoryboard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = EEE4AEA57E6DA239A2BCAE48 /* MainStoryboard.storyboard */; };
+		EEE4A3BE0A2643E00649D1B3 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EEE4ACA38036D947932ABF13 /* UIKit.framework */; };
+		EEE4A5941A50272A3D1B0FAF /* GameViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EEE4A8B8F08E442913DA0DC0 /* GameViewController.m */; };
+		EEE4A667F0676940B3A3FDB1 /* JewelGridView.m in Sources */ = {isa = PBXBuildFile; fileRef = EEE4ACE7D4269FD65F37D58F /* JewelGridView.m */; };
+		EEE4A864FDCF690259365E20 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = EEE4AA8023D1A3930F2315B3 /* AppDelegate.m */; };
+		EEE4A92549B1F0254291E8E4 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = EEE4ABF0252C539B82CD63EB /* InfoPlist.strings */; };
+		EEE4A96728BEEB18E92243CC /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EEE4ABDF847EFA43AF36F07A /* CoreGraphics.framework */; };
+		EEE4AC0F011B90C53F052ED5 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = EEE4A97D15CF7BE8AE24E444 /* main.m */; };
+		EEE4ADA85B995A5280B2FA4B /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EEE4A388C39ABECA5DEAE5B4 /* Default@2x.png */; };
+		EEE4AE0A368A543C7B44C6A7 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EEE4A8CCE84133773B557DC3 /* Default-568h@2x.png */; };
+		EEE4AEC9D95F9D6945DE4FE8 /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = EEE4ABDA652536AA5595D943 /* Default.png */; };
+		EEE4AF5C6BE2D0D12431B7A8 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EEE4A2A7821C35BE0FB96671 /* Foundation.framework */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		EEE4A07A426BF2FF2CEA885E /* AutoLayoutGame-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "AutoLayoutGame-Prefix.pch"; sourceTree = "<group>"; };
+		EEE4A1C1EEECC7F40D4BFD14 /* JewelView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JewelView.h; sourceTree = "<group>"; };
+		EEE4A2A7821C35BE0FB96671 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		EEE4A388C39ABECA5DEAE5B4 /* Default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default@2x.png"; sourceTree = "<group>"; };
+		EEE4A42ED5999149055C8CFC /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
+		EEE4A4E2284B1D6BA1D49AA2 /* JewelGridView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JewelGridView.h; sourceTree = "<group>"; };
+		EEE4A54AFC92954A48A879AD /* JewelView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JewelView.m; sourceTree = "<group>"; };
+		EEE4A63555E2539BF0D243C6 /* GameViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GameViewController.h; sourceTree = "<group>"; };
+		EEE4A8B8F08E442913DA0DC0 /* GameViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GameViewController.m; sourceTree = "<group>"; };
+		EEE4A8CCE84133773B557DC3 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
+		EEE4A94006681FB019BC3AFE /* AutoLayoutGame-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.info; path = "AutoLayoutGame-Info.plist"; sourceTree = "<group>"; };
+		EEE4A97D15CF7BE8AE24E444 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		EEE4AA8023D1A3930F2315B3 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		EEE4ABD2BCF4AE83A116C241 /* AutoLayoutGame.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AutoLayoutGame.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		EEE4ABDA652536AA5595D943 /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Default.png; sourceTree = "<group>"; };
+		EEE4ABDF847EFA43AF36F07A /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
+		EEE4ACA38036D947932ABF13 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
+		EEE4ACE7D4269FD65F37D58F /* JewelGridView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JewelGridView.m; sourceTree = "<group>"; };
+		EEE4AD8323D12391A2E4B222 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = en; path = en.lproj/MainStoryboard.storyboard; sourceTree = "<group>"; };
+		EEE4AED79728FA7EB2A8CD64 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		EEE4A9609C002A8EB25EBC54 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				EEE4A3BE0A2643E00649D1B3 /* UIKit.framework in Frameworks */,
+				EEE4AF5C6BE2D0D12431B7A8 /* Foundation.framework in Frameworks */,
+				EEE4A96728BEEB18E92243CC /* CoreGraphics.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		EEE4A0579A34FB22FC0BA45A /* Game View */ = {
+			isa = PBXGroup;
+			children = (
+				EEE4AFCC15363456B807C224 /* Jewel View */,
+				EEE4AFBBD24097E674038869 /* Jewel Grid */,
+				EEE4AE2B15089A1E58F373C9 /* Game View Controller */,
+			);
+			path = "Game View";
+			sourceTree = "<group>";
+		};
+		EEE4A13B85B0ABCF424117E6 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				EEE4A94006681FB019BC3AFE /* AutoLayoutGame-Info.plist */,
+				EEE4ABF0252C539B82CD63EB /* InfoPlist.strings */,
+				EEE4A97D15CF7BE8AE24E444 /* main.m */,
+				EEE4A07A426BF2FF2CEA885E /* AutoLayoutGame-Prefix.pch */,
+				EEE4ABDA652536AA5595D943 /* Default.png */,
+				EEE4A388C39ABECA5DEAE5B4 /* Default@2x.png */,
+				EEE4A8CCE84133773B557DC3 /* Default-568h@2x.png */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		EEE4A3774F0A8C2861DC060C /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				EEE4ACA38036D947932ABF13 /* UIKit.framework */,
+				EEE4A2A7821C35BE0FB96671 /* Foundation.framework */,
+				EEE4ABDF847EFA43AF36F07A /* CoreGraphics.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		EEE4AC7B31B049EF7A9AFEB8 /* AutoLayoutGame */ = {
+			isa = PBXGroup;
+			children = (
+				EEE4A13B85B0ABCF424117E6 /* Supporting Files */,
+				EEE4A42ED5999149055C8CFC /* AppDelegate.h */,
+				EEE4AA8023D1A3930F2315B3 /* AppDelegate.m */,
+				EEE4AEA57E6DA239A2BCAE48 /* MainStoryboard.storyboard */,
+				EEE4A0579A34FB22FC0BA45A /* Game View */,
+			);
+			path = AutoLayoutGame;
+			sourceTree = "<group>";
+		};
+		EEE4AE2B15089A1E58F373C9 /* Game View Controller */ = {
+			isa = PBXGroup;
+			children = (
+				EEE4A8B8F08E442913DA0DC0 /* GameViewController.m */,
+				EEE4A63555E2539BF0D243C6 /* GameViewController.h */,
+			);
+			path = "Game View Controller";
+			sourceTree = "<group>";
+		};
+		EEE4AE60681E74F6BEF9769D /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				EEE4ABD2BCF4AE83A116C241 /* AutoLayoutGame.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		EEE4AF4EEC5342CC52F30CE3 = {
+			isa = PBXGroup;
+			children = (
+				EEE4AE60681E74F6BEF9769D /* Products */,
+				EEE4A3774F0A8C2861DC060C /* Frameworks */,
+				EEE4AC7B31B049EF7A9AFEB8 /* AutoLayoutGame */,
+			);
+			sourceTree = "<group>";
+		};
+		EEE4AFBBD24097E674038869 /* Jewel Grid */ = {
+			isa = PBXGroup;
+			children = (
+				EEE4ACE7D4269FD65F37D58F /* JewelGridView.m */,
+				EEE4A4E2284B1D6BA1D49AA2 /* JewelGridView.h */,
+			);
+			path = "Jewel Grid";
+			sourceTree = "<group>";
+		};
+		EEE4AFCC15363456B807C224 /* Jewel View */ = {
+			isa = PBXGroup;
+			children = (
+				EEE4A54AFC92954A48A879AD /* JewelView.m */,
+				EEE4A1C1EEECC7F40D4BFD14 /* JewelView.h */,
+			);
+			path = "Jewel View";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		EEE4A8074AE89B0B7BE53812 /* AutoLayoutGame */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = EEE4A3B8590BC22EC5B193FC /* Build configuration list for PBXNativeTarget "AutoLayoutGame" */;
+			buildPhases = (
+				EEE4A9050FCCA22BABC10B1A /* Sources */,
+				EEE4A9609C002A8EB25EBC54 /* Frameworks */,
+				EEE4ABB97321A7187F2BDFF0 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = AutoLayoutGame;
+			productName = AutoLayoutGame;
+			productReference = EEE4ABD2BCF4AE83A116C241 /* AutoLayoutGame.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		EEE4A3B3EEE9426B34F0AE38 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				ORGANIZATIONNAME = "Oliver Foggin";
+			};
+			buildConfigurationList = EEE4A95E2B92824E1EDD03E1 /* Build configuration list for PBXProject "AutoLayoutGame" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = EEE4AF4EEC5342CC52F30CE3;
+			productRefGroup = EEE4AE60681E74F6BEF9769D /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				EEE4A8074AE89B0B7BE53812 /* AutoLayoutGame */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		EEE4ABB97321A7187F2BDFF0 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				EEE4A92549B1F0254291E8E4 /* InfoPlist.strings in Resources */,
+				EEE4AEC9D95F9D6945DE4FE8 /* Default.png in Resources */,
+				EEE4ADA85B995A5280B2FA4B /* Default@2x.png in Resources */,
+				EEE4AE0A368A543C7B44C6A7 /* Default-568h@2x.png in Resources */,
+				EEE4A14FBD487DB19F6A1FF7 /* MainStoryboard.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		EEE4A9050FCCA22BABC10B1A /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				EEE4AC0F011B90C53F052ED5 /* main.m in Sources */,
+				EEE4A864FDCF690259365E20 /* AppDelegate.m in Sources */,
+				EEE4A07A5D935F7C3D9E1323 /* JewelView.m in Sources */,
+				EEE4A667F0676940B3A3FDB1 /* JewelGridView.m in Sources */,
+				EEE4A5941A50272A3D1B0FAF /* GameViewController.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		EEE4ABF0252C539B82CD63EB /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				EEE4AED79728FA7EB2A8CD64 /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		EEE4AEA57E6DA239A2BCAE48 /* MainStoryboard.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				EEE4AD8323D12391A2E4B222 /* en */,
+			);
+			name = MainStoryboard.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		EEE4A10E2FDF7EF2AC4AE5D7 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "AutoLayoutGame/AutoLayoutGame-Prefix.pch";
+				INFOPLIST_FILE = "AutoLayoutGame/AutoLayoutGame-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Debug;
+		};
+		EEE4A55CEE1FAE14BFC8DDE7 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "AutoLayoutGame/AutoLayoutGame-Prefix.pch";
+				INFOPLIST_FILE = "AutoLayoutGame/AutoLayoutGame-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Release;
+		};
+		EEE4A942232D9930F15ACC98 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 6.1;
+				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
+				SDKROOT = iphoneos;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		EEE4AF30001BD57917E5F4C5 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 6.1;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+			};
+			name = Debug;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		EEE4A3B8590BC22EC5B193FC /* Build configuration list for PBXNativeTarget "AutoLayoutGame" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				EEE4A55CEE1FAE14BFC8DDE7 /* Release */,
+				EEE4A10E2FDF7EF2AC4AE5D7 /* Debug */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		EEE4A95E2B92824E1EDD03E1 /* Build configuration list for PBXProject "AutoLayoutGame" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				EEE4A942232D9930F15ACC98 /* Release */,
+				EEE4AF30001BD57917E5F4C5 /* Debug */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = EEE4A3B3EEE9426B34F0AE38 /* Project object */;
+}
