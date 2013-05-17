@@ -47,6 +47,21 @@
     }
 }
 
+- (void)addJewelView
+{
+    int minColumnIndex;
+    int minCount = (int) MAXFLOAT;
+
+    for (NSArray *column in self.jewelRows) {
+        if ([column count] < minCount) {
+            minCount = [column count];
+            minColumnIndex = [self.jewelRows indexOfObject:column];
+        }
+    }
+
+    [self addJewelViewToColumnIndex:minColumnIndex];
+}
+
 - (void)removeJewel:(JewelView *)jewelView
 {
     NSMutableArray *jewelColumn = [self columnWithJewelView:jewelView];
@@ -54,7 +69,7 @@
     int index = [jewelColumn indexOfObject:jewelView];
 
     JewelView *next = nil;
-    JewelView *prev = nil;
+    JewelView *previous = nil;
 
     if (index == [jewelColumn count] - 1) {
         [jewelView removeFromSuperview];
@@ -64,7 +79,7 @@
         next = jewelColumn[1];
     } else {
         next = jewelColumn[index + 1];
-        prev = jewelColumn[index - 1];
+        previous = jewelColumn[index - 1];
     }
 
     [jewelView removeFromSuperview];
@@ -72,19 +87,19 @@
 
     NSLayoutConstraint *spacingConstraint;
 
-    if (prev) {
+    if (previous) {
         spacingConstraint = [NSLayoutConstraint constraintWithItem:next
                                                          attribute:NSLayoutAttributeBottom
                                                          relatedBy:NSLayoutRelationEqual
-                                                            toItem:prev
+                                                            toItem:previous
                                                          attribute:NSLayoutAttributeTop
                                                         multiplier:1.0
-                                                          constant:next.center.y - prev.center.y];
+                                                          constant:next.center.y - previous.center.y];
 
         [self addConstraint:[NSLayoutConstraint constraintWithItem:next
                                                          attribute:NSLayoutAttributeWidth
                                                          relatedBy:NSLayoutRelationEqual
-                                                            toItem:prev
+                                                            toItem:previous
                                                          attribute:NSLayoutAttributeWidth
                                                         multiplier:1.0
                                                           constant:0.0]];
@@ -92,7 +107,7 @@
         [self addConstraint:[NSLayoutConstraint constraintWithItem:next
                                                          attribute:NSLayoutAttributeCenterX
                                                          relatedBy:NSLayoutRelationEqual
-                                                            toItem:prev
+                                                            toItem:previous
                                                          attribute:NSLayoutAttributeCenterX
                                                         multiplier:1.0
                                                           constant:0.0]];
@@ -125,48 +140,8 @@
 
     [self addConstraint:spacingConstraint];
 
-    [UIView animateWithDuration:0.25
-                          delay:0.0
-                        options:UIViewAnimationOptionCurveEaseIn
-                     animations:^{
-                         spacingConstraint.constant = prev ? -8 : -20;
-                         [self layoutIfNeeded];
-                     }
-                     completion:^(BOOL finished) {
+    [self animateConstraint:previous spacingConstraint:spacingConstraint];
 
-                     }];
-
-}
-
-- (NSMutableArray *)columnWithJewelView:(JewelView *)jewelView
-{
-    for (NSMutableArray *column in self.jewelRows) {
-        if ([column containsObject:jewelView]) {
-            return column;
-        }
-    }
-    return nil;
-}
-
-- (JewelView *)bottomOfColumn:(int)index
-{
-    if (index < 0
-            || index >= [self.jewelRows count]) {
-        return nil;
-    }
-
-    NSArray *leftColumn = self.jewelRows[index - 1];
-
-    if ([leftColumn count] == 0) {
-        return nil;
-    }
-
-    return leftColumn[0];
-}
-
-- (void)addJewelView
-{
-    [self addJewelViewToColumnIndex:arc4random_uniform(self.numberOfColumns)];
 }
 
 - (void)addJewelViewToColumnIndex:(int)index
@@ -238,16 +213,7 @@
 
     [self addConstraint:spacingConstraint];
 
-    [UIView animateWithDuration:0.25
-                          delay:0.0
-                        options:UIViewAnimationOptionCurveEaseIn
-                     animations:^{
-                         spacingConstraint.constant = -(previous ? 8 : 20);
-                         [self layoutIfNeeded];
-                     }
-                     completion:^(BOOL finished) {
-
-                     }];
+    [self animateConstraint:previous spacingConstraint:spacingConstraint];
 }
 
 - (float)columnWidth
@@ -262,6 +228,46 @@
     float blue = arc4random_uniform(255);
 
     return [UIColor colorWithRed:red/255.0 green:green/255.0 blue:blue/255.0 alpha:1.0];
+}
+
+- (void)animateConstraint:(JewelView *)prev spacingConstraint:(NSLayoutConstraint *)spacingConstraint
+{
+    [UIView animateWithDuration:0.25
+                          delay:0.0
+                        options:UIViewAnimationOptionCurveEaseIn
+                     animations:^{
+                         spacingConstraint.constant = prev ? -8 : -20;
+                         [self layoutIfNeeded];
+                     }
+                     completion:^(BOOL finished) {
+
+                     }];
+}
+
+- (NSMutableArray *)columnWithJewelView:(JewelView *)jewelView
+{
+    for (NSMutableArray *column in self.jewelRows) {
+        if ([column containsObject:jewelView]) {
+            return column;
+        }
+    }
+    return nil;
+}
+
+- (JewelView *)bottomOfColumn:(int)index
+{
+    if (index < 0
+            || index >= [self.jewelRows count]) {
+        return nil;
+    }
+
+    NSArray *leftColumn = self.jewelRows[index - 1];
+
+    if ([leftColumn count] == 0) {
+        return nil;
+    }
+
+    return leftColumn[0];
 }
 
 @end
