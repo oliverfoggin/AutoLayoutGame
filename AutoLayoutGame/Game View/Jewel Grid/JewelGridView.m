@@ -10,8 +10,9 @@
 
 @interface JewelGridView ()
 
-@property (nonatomic, strong) NSMutableArray *jewelRows;
+@property (nonatomic, strong) NSMutableArray *jewelColumns;
 @property (nonatomic) NSUInteger numberOfColumns;
+@property (nonatomic) NSUInteger numberOfRows;
 
 @end
 
@@ -22,20 +23,22 @@
     self.clipsToBounds = YES;
 
     self.numberOfColumns = 6;
+    self.numberOfRows = 9;
 
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(jewelTapped:) name:JewelTappedNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(jewelSwipedRight:) name:JewelSwipedRightNotification object:nil];
 
     [self setupJewels];
 }
 
 - (void)setupJewels
 {
-    self.jewelRows = [[NSMutableArray alloc] initWithCapacity:self.numberOfColumns];
+    self.jewelColumns = [[NSMutableArray alloc] initWithCapacity:self.numberOfColumns];
 
     for (int i = 0 ; i < self.numberOfColumns ; ++i) {
         NSMutableArray *column = [[NSMutableArray alloc] init];
 
-        [self.jewelRows addObject:column];
+        [self.jewelColumns addObject:column];
     }
 }
 
@@ -49,17 +52,17 @@
 
 - (void)addJewelView
 {
-    int minColumnIndex;
-    int minCount = (int) MAXFLOAT;
+    [self replaceMissingJewels];
+}
 
-    for (NSArray *column in self.jewelRows) {
-        if ([column count] < minCount) {
-            minCount = [column count];
-            minColumnIndex = [self.jewelRows indexOfObject:column];
+- (void)replaceMissingJewels
+{
+    for (NSMutableArray *column in self.jewelColumns) {
+        int missingJewelCount = self.numberOfRows - [column count];
+        for (int i = 0 ; i < missingJewelCount ; ++i) {
+            [self addJewelViewToColumnIndex:[self.jewelColumns indexOfObject:column]];
         }
     }
-
-    [self addJewelViewToColumnIndex:minColumnIndex];
 }
 
 - (void)removeJewel:(JewelView *)jewelView
@@ -119,7 +122,7 @@
                                                             toItem:self
                                                          attribute:NSLayoutAttributeLeft
                                                         multiplier:1.0
-                                                          constant:20 + [self.jewelRows indexOfObject:jewelColumn] * ([self columnWidth] + 8)]];
+                                                          constant:20 + [self.jewelColumns indexOfObject:jewelColumn] * ([self columnWidth] + 8)]];
 
         [self addConstraint:[NSLayoutConstraint constraintWithItem:next
                                                          attribute:NSLayoutAttributeWidth
@@ -141,14 +144,19 @@
     [self addConstraint:spacingConstraint];
 
     [self animateConstraint:previous spacingConstraint:spacingConstraint];
-
 }
 
 - (void)addJewelViewToColumnIndex:(int)index
 {
-    NSMutableArray *jewelColumn = self.jewelRows[index];
+    NSMutableArray *jewelColumn = self.jewelColumns[index];
+
+    if ([jewelColumn count] == self.numberOfRows) {
+        return;
+    }
 
     JewelView *jewelView = [[JewelView alloc] initWithColor:[self randomColor]];
+    jewelView.accessibilityIdentifier = [NSString stringWithFormat:@"%d, %d", index, [jewelColumn count] + 1];
+    jewelView.restorationIdentifier = [NSString stringWithFormat:@"%d, %d", index, [jewelColumn count] + 1];
     [self addSubview:jewelView];
 
     NSLayoutConstraint *spacingConstraint;
@@ -240,13 +248,13 @@
                          [self layoutIfNeeded];
                      }
                      completion:^(BOOL finished) {
-
+                         [self replaceMissingJewels];
                      }];
 }
 
 - (NSMutableArray *)columnWithJewelView:(JewelView *)jewelView
 {
-    for (NSMutableArray *column in self.jewelRows) {
+    for (NSMutableArray *column in self.jewelColumns) {
         if ([column containsObject:jewelView]) {
             return column;
         }
@@ -254,20 +262,245 @@
     return nil;
 }
 
-- (JewelView *)bottomOfColumn:(int)index
+- (void)jewelSwipedRight:(NSNotification *)notification
 {
-    if (index < 0
-            || index >= [self.jewelRows count]) {
-        return nil;
+    JewelView *leftJewel = notification.object;
+
+    NSMutableArray *leftColumn = [self columnWithJewelView:leftJewel];
+
+    int columnIndex = [self.jewelColumns indexOfObject:leftColumn];
+
+    if (columnIndex == [self.jewelColumns count] - 1) {
+        return;
     }
 
-    NSArray *leftColumn = self.jewelRows[index - 1];
+    NSMutableArray *rightColumn = self.jewelColumns[columnIndex + 1];
 
-    if ([leftColumn count] == 0) {
-        return nil;
+    JewelView *rightJewel = rightColumn[[leftColumn indexOfObject:leftJewel]];
+
+    int rowIndex = [leftColumn indexOfObject:leftJewel];
+
+    NSLayoutConstraint *leftLeftEdgeConstraint;
+    NSLayoutConstraint *rightLeftEdgeConstraint;
+    NSLayoutConstraint *leftNextAlignmentConstraint;
+    NSLayoutConstraint *rightNextAlignmentConstraint;
+    NSLayoutConstraint *leftPrevAlignmentConstraint;
+    NSLayoutConstraint *rightPrevAlignmentConstraint;
+
+    JewelView *leftPrev = nil;
+    JewelView *rightPrev = nil;
+    JewelView *leftNext = nil;
+    JewelView *rightNext = nil;
+
+    if ([leftColumn count] == 1) {
+
+    } else if (rowIndex == [leftColumn count] - 1) {
+        leftPrev = leftColumn[rowIndex - 1];
+        rightPrev = rightColumn[rowIndex - 1];
+    } else if (rowIndex == 0) {
+        leftNext = leftColumn[1];
+        rightNext = rightColumn[1];
+    } else {
+        leftNext = leftColumn[rowIndex + 1];
+        leftPrev = leftColumn[rowIndex - 1];
+        rightNext = rightColumn[rowIndex + 1];
+        rightPrev = rightColumn[rowIndex - 1];
     }
 
-    return leftColumn[0];
+    for (NSLayoutConstraint *constraint in [self constraints]) {
+        // left column
+        if (constraint.firstItem == leftJewel && constraint.secondItem == self
+                && constraint.firstAttribute == NSLayoutAttributeLeft) {
+            [self removeConstraint:constraint];
+        }
+
+        if (constraint.firstItem == leftNext && constraint.secondItem == leftJewel) {
+            if (constraint.firstAttribute == NSLayoutAttributeCenterX
+                    || constraint.firstAttribute == NSLayoutAttributeBottom
+                    || constraint.firstAttribute == NSLayoutAttributeWidth) {
+                [self removeConstraint:constraint];
+            }
+        }
+
+        if (constraint.firstItem == leftJewel && constraint.secondItem == leftPrev) {
+            if (constraint.firstAttribute == NSLayoutAttributeCenterX
+                    || constraint.firstAttribute == NSLayoutAttributeBottom
+                    || constraint.firstAttribute == NSLayoutAttributeWidth) {
+                [self removeConstraint:constraint];
+            }
+        }
+
+        // right column
+        if (constraint.firstItem == rightJewel && constraint.secondItem == self
+                && constraint.firstAttribute == NSLayoutAttributeLeft) {
+            [self removeConstraint:constraint];
+        }
+
+        if (constraint.firstItem == rightNext && constraint.secondItem == rightJewel) {
+            if (constraint.firstAttribute == NSLayoutAttributeCenterX
+                    || constraint.firstAttribute == NSLayoutAttributeBottom
+                    || constraint.firstAttribute == NSLayoutAttributeWidth) {
+                [self removeConstraint:constraint];
+            }
+        }
+
+        if (constraint.firstItem == rightJewel && constraint.secondItem == rightPrev) {
+            if (constraint.firstAttribute == NSLayoutAttributeCenterX
+                    || constraint.firstAttribute == NSLayoutAttributeBottom
+                    || constraint.firstAttribute == NSLayoutAttributeWidth) {
+                [self removeConstraint:constraint];
+            }
+        }
+    }
+
+    //left jewel moving right
+    if (rightPrev) {
+        rightPrevAlignmentConstraint = [NSLayoutConstraint constraintWithItem:leftJewel
+                                                                    attribute:NSLayoutAttributeCenterX
+                                                                    relatedBy:NSLayoutRelationEqual
+                                                                       toItem:rightPrev
+                                                                    attribute:NSLayoutAttributeCenterX
+                                                                   multiplier:1.0
+                                                                     constant:-([self columnWidth] + 8)];
+        [self addConstraint:rightPrevAlignmentConstraint];
+
+        [self addConstraint:[NSLayoutConstraint constraintWithItem:leftJewel
+                                                         attribute:NSLayoutAttributeBottom
+                                                         relatedBy:NSLayoutRelationEqual
+                                                            toItem:rightPrev
+                                                         attribute:NSLayoutAttributeTop
+                                                        multiplier:1.0
+                                                          constant:-8]];
+
+        [self addConstraint:[NSLayoutConstraint constraintWithItem:leftJewel
+                                                         attribute:NSLayoutAttributeWidth
+                                                         relatedBy:NSLayoutRelationEqual
+                                                            toItem:rightPrev
+                                                         attribute:NSLayoutAttributeWidth
+                                                        multiplier:1.0
+                                                          constant:0.0]];
+    } else {
+        leftLeftEdgeConstraint = [NSLayoutConstraint constraintWithItem:leftJewel
+                                                              attribute:NSLayoutAttributeLeft
+                                                              relatedBy:NSLayoutRelationEqual
+                                                                 toItem:self
+                                                              attribute:NSLayoutAttributeLeft
+                                                             multiplier:1.0
+                                                               constant:20 + [self.jewelColumns indexOfObject:leftColumn] * ([self columnWidth] + 8)];
+        [self addConstraint:leftLeftEdgeConstraint];
+    }
+
+    if (rightNext) {
+        rightNextAlignmentConstraint = [NSLayoutConstraint constraintWithItem:rightNext
+                                                                    attribute:NSLayoutAttributeCenterX
+                                                                    relatedBy:NSLayoutRelationEqual
+                                                                       toItem:leftJewel
+                                                                    attribute:NSLayoutAttributeCenterX
+                                                                   multiplier:1.0
+                                                                     constant:rightNext.center.x - leftJewel.center.x];
+        [self addConstraint:rightNextAlignmentConstraint];
+
+        [self addConstraint:[NSLayoutConstraint constraintWithItem:rightNext
+                                                         attribute:NSLayoutAttributeBottom
+                                                         relatedBy:NSLayoutRelationEqual
+                                                            toItem:leftJewel
+                                                         attribute:NSLayoutAttributeTop
+                                                        multiplier:1.0
+                                                          constant:-8]];
+
+        [self addConstraint:[NSLayoutConstraint constraintWithItem:rightNext
+                                                         attribute:NSLayoutAttributeWidth
+                                                         relatedBy:NSLayoutRelationEqual
+                                                            toItem:leftJewel
+                                                         attribute:NSLayoutAttributeWidth
+                                                        multiplier:1.0
+                                                          constant:0]];
+    }
+
+    //right jewel moving left
+    if (leftPrev) {
+        leftPrevAlignmentConstraint = [NSLayoutConstraint constraintWithItem:rightJewel
+                                                                    attribute:NSLayoutAttributeCenterX
+                                                                    relatedBy:NSLayoutRelationEqual
+                                                                       toItem:leftPrev
+                                                                    attribute:NSLayoutAttributeCenterX
+                                                                   multiplier:1.0
+                                                                     constant:[self columnWidth] + 8];
+        [self addConstraint:leftPrevAlignmentConstraint];
+
+        [self addConstraint:[NSLayoutConstraint constraintWithItem:rightJewel
+                                                         attribute:NSLayoutAttributeBottom
+                                                         relatedBy:NSLayoutRelationEqual
+                                                            toItem:leftPrev
+                                                         attribute:NSLayoutAttributeTop
+                                                        multiplier:1.0
+                                                          constant:-8]];
+
+        [self addConstraint:[NSLayoutConstraint constraintWithItem:rightJewel
+                                                         attribute:NSLayoutAttributeWidth
+                                                         relatedBy:NSLayoutRelationEqual
+                                                            toItem:leftPrev
+                                                         attribute:NSLayoutAttributeWidth
+                                                        multiplier:1.0
+                                                          constant:0.0]];
+    } else {
+        rightLeftEdgeConstraint = [NSLayoutConstraint constraintWithItem:rightJewel
+                                                               attribute:NSLayoutAttributeLeft
+                                                               relatedBy:NSLayoutRelationEqual
+                                                                  toItem:self
+                                                               attribute:NSLayoutAttributeLeft
+                                                              multiplier:1.0
+                                                                constant:20 + [self.jewelColumns indexOfObject:rightColumn] * ([self columnWidth] + 8)];
+        [self addConstraint:rightLeftEdgeConstraint];
+    }
+
+    if (leftNext) {
+        leftNextAlignmentConstraint = [NSLayoutConstraint constraintWithItem:leftNext
+                                                                   attribute:NSLayoutAttributeCenterX
+                                                                   relatedBy:NSLayoutRelationEqual
+                                                                      toItem:rightJewel
+                                                                   attribute:NSLayoutAttributeCenterX
+                                                                  multiplier:1.0
+                                                                    constant:-([self columnWidth] + 8)];
+        [self addConstraint:leftNextAlignmentConstraint];
+
+        [self addConstraint:[NSLayoutConstraint constraintWithItem:leftNext
+                                                         attribute:NSLayoutAttributeBottom
+                                                         relatedBy:NSLayoutRelationEqual
+                                                            toItem:rightJewel
+                                                         attribute:NSLayoutAttributeTop
+                                                        multiplier:1.0
+                                                          constant:-8]];
+
+        [self addConstraint:[NSLayoutConstraint constraintWithItem:leftNext
+                                                         attribute:NSLayoutAttributeWidth
+                                                         relatedBy:NSLayoutRelationEqual
+                                                            toItem:rightJewel
+                                                         attribute:NSLayoutAttributeWidth
+                                                        multiplier:1.0
+                                                          constant:0]];
+    }
+
+    [leftColumn replaceObjectAtIndex:rowIndex withObject:rightJewel];
+    [rightColumn replaceObjectAtIndex:rowIndex withObject:leftJewel];
+
+    [UIView animateWithDuration:0.25
+                          delay:0.0
+                        options:UIViewAnimationOptionCurveEaseInOut
+                     animations:^{
+                         leftLeftEdgeConstraint.constant = 20 + [self.jewelColumns indexOfObject:rightColumn] * ([self columnWidth] + 8);
+                         rightNextAlignmentConstraint.constant = 0;
+                         rightPrevAlignmentConstraint.constant = 0;
+
+                         rightLeftEdgeConstraint.constant = 20 + [self.jewelColumns indexOfObject:leftColumn] * ([self columnWidth] + 8);
+                         leftNextAlignmentConstraint.constant = 0;
+                         leftPrevAlignmentConstraint.constant = 0;
+
+                         [self layoutIfNeeded];
+                     }
+                     completion:^(BOOL finished) {
+
+                     }];
 }
 
 @end

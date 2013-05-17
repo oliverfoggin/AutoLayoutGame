@@ -19,6 +19,10 @@
     if (self) {
         self.backgroundColor = color;
 
+        UISwipeGestureRecognizer *rightSwipeGestureRecognizer = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(swipedRight)];
+        [rightSwipeGestureRecognizer setDirection:UISwipeGestureRecognizerDirectionRight];
+        [self addGestureRecognizer:rightSwipeGestureRecognizer];
+
         UITapGestureRecognizer *tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapped)];
         [self addGestureRecognizer:tapGestureRecognizer];
 
@@ -38,6 +42,11 @@
 - (void)tapped
 {
     [[NSNotificationCenter defaultCenter] postNotificationName:JewelTappedNotification object:self];
+}
+
+- (void)swipedRight
+{
+    [[NSNotificationCenter defaultCenter] postNotificationName:JewelSwipedRightNotification object:self];
 }
 
 @end

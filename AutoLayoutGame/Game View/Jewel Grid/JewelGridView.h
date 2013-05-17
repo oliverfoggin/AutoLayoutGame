@@ -11,4 +11,5 @@
 
 - (void)addJewelView;
 
+- (void)replaceMissingJewels;
 @end

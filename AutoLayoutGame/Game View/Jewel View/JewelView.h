@@ -8,6 +8,7 @@
 #import <Foundation/Foundation.h>
 
 static NSString *JewelTappedNotification = @"JewelTappedNotification";
+static NSString *JewelSwipedRightNotification = @"JewelSwipedRightNotification";
 
 @interface JewelView : UIView
 
