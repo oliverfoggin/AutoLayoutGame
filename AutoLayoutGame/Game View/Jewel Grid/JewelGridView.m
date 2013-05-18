@@ -13,6 +13,7 @@
 @property (nonatomic, strong) NSMutableArray *jewelColumns;
 @property (nonatomic) NSUInteger numberOfColumns;
 @property (nonatomic) NSUInteger numberOfRows;
+@property (nonatomic, strong) NSArray *colours;
 
 @end
 
@@ -347,6 +348,22 @@
                                                              multiplier:1.0
                                                                constant:20 + [self.jewelColumns indexOfObject:leftColumn] * ([self columnWidth] + 8)];
         [self addConstraint:leftLeftEdgeConstraint];
+
+        [self addConstraint:[NSLayoutConstraint constraintWithItem:leftJewel
+                                                         attribute:NSLayoutAttributeBottom
+                                                         relatedBy:NSLayoutRelationEqual
+                                                            toItem:self
+                                                         attribute:NSLayoutAttributeBottom
+                                                        multiplier:1.0
+                                                          constant:-20]];
+
+        [self addConstraint:[NSLayoutConstraint constraintWithItem:leftJewel
+                                                         attribute:NSLayoutAttributeWidth
+                                                         relatedBy:NSLayoutRelationEqual
+                                                            toItem:nil
+                                                         attribute:NSLayoutAttributeNotAnAttribute
+                                                        multiplier:1.0
+                                                          constant:[self columnWidth]]];
     }
 
     if (rightNext) {
@@ -411,6 +428,22 @@
                                                               multiplier:1.0
                                                                 constant:20 + [self.jewelColumns indexOfObject:rightColumn] * ([self columnWidth] + 8)];
         [self addConstraint:rightLeftEdgeConstraint];
+
+        [self addConstraint:[NSLayoutConstraint constraintWithItem:rightJewel
+                                                         attribute:NSLayoutAttributeBottom
+                                                         relatedBy:NSLayoutRelationEqual
+                                                            toItem:self
+                                                         attribute:NSLayoutAttributeBottom
+                                                        multiplier:1.0
+                                                          constant:-20]];
+
+        [self addConstraint:[NSLayoutConstraint constraintWithItem:rightJewel
+                                                         attribute:NSLayoutAttributeWidth
+                                                         relatedBy:NSLayoutRelationEqual
+                                                            toItem:nil
+                                                         attribute:NSLayoutAttributeNotAnAttribute
+                                                        multiplier:1.0
+                                                          constant:[self columnWidth]]];
     }
 
     if (leftNext) {
@@ -469,13 +502,24 @@
     return (self.frame.size.width - 40 - (self.numberOfColumns - 1) * 8)/ self.numberOfColumns;
 }
 
+- (NSArray *)colours
+{
+    if (_colours == nil) {
+        _colours = @[
+                [UIColor redColor],
+                [UIColor orangeColor],
+                [UIColor yellowColor],
+                [UIColor greenColor],
+                [UIColor blueColor],
+                [UIColor purpleColor]
+        ];
+    }
+    return _colours;
+}
+
 - (UIColor *)randomColor
 {
-    float red = arc4random_uniform(255);
-    float green = arc4random_uniform(255);
-    float blue = arc4random_uniform(255);
-
-    return [UIColor colorWithRed:red/255.0 green:green/255.0 blue:blue/255.0 alpha:1.0];
+    return self.colours[arc4random_uniform([self.colours count] - 1)];
 }
 
 #pragma mark - jewel actions
