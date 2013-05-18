@@ -14,6 +14,7 @@
 @property (nonatomic) NSUInteger numberOfColumns;
 @property (nonatomic) NSUInteger numberOfRows;
 @property (nonatomic, strong) NSArray *colours;
+@property (nonatomic) BOOL reversing;
 
 @end
 
@@ -23,8 +24,10 @@
 {
     self.clipsToBounds = YES;
 
+    self.reversing = NO;
+
     self.numberOfColumns = 6;
-    self.numberOfRows = 7;
+    self.numberOfRows = 9;
 
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(jewelTapped:) name:JewelTappedNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(jewelSwipedRight:) name:JewelSwipedRightNotification object:nil];
@@ -143,6 +146,7 @@
     }
 
     JewelView *jewelView = [[JewelView alloc] initWithColor:[self randomColor]];
+    [self addSubview:jewelView];
     [jewelView addConstraint:[NSLayoutConstraint constraintWithItem:jewelView
                                                           attribute:NSLayoutAttributeWidth
                                                           relatedBy:NSLayoutRelationEqual
@@ -150,7 +154,6 @@
                                                           attribute:NSLayoutAttributeNotAnAttribute
                                                          multiplier:1.0
                                                            constant:[self columnWidth]]];
-    [self addSubview:jewelView];
 
     NSLayoutConstraint *spacingConstraint;
 
@@ -364,9 +367,6 @@
 
     [self addConstraints:newConstraints];
 
-    [leftColumn replaceObjectAtIndex:rowIndex withObject:rightJewel];
-    [rightColumn replaceObjectAtIndex:rowIndex withObject:leftJewel];
-
     [UIView animateWithDuration:0.25
                           delay:0.0
                         options:UIViewAnimationOptionCurveEaseInOut
@@ -382,12 +382,21 @@
                          [self layoutIfNeeded];
                      }
                      completion:^(BOOL finished) {
-                         [self checkForJewelsToRemove];
+                         [leftColumn replaceObjectAtIndex:rowIndex withObject:rightJewel];
+                         [rightColumn replaceObjectAtIndex:rowIndex withObject:leftJewel];
+                         if (!self.reversing) {
+                             if (![self checkForJewelsToRemove]) {
+                                 self.reversing = YES;
+                                 [self swapLeftJewel:rightJewel withRightJewel:leftJewel];
+                             }
+                         } else {
+                             self.reversing = NO;
+                         }
                      }];
 }
 
-- (void)swapTopJewel:(JewelView *)aboveJewel
-     withBottomJewel:(JewelView *)belowJewel
+- (void)swapAboveJewel:(JewelView *)aboveJewel
+        withBelowJewel:(JewelView *)belowJewel
 {
     JewelView *topJewel = [self jewelAboveJewel:aboveJewel];
     JewelView *bottomJewel = [self jewelBelowJewel:belowJewel];
@@ -506,9 +515,6 @@
 
     [self addConstraints:newConstraints];
 
-    [column replaceObjectAtIndex:[column indexOfObject:aboveJewel] withObject:belowJewel];
-    [column replaceObjectAtIndex:[column indexOfObject:belowJewel] withObject:aboveJewel];
-
     [UIView animateWithDuration:0.25
                           delay:0.0
                         options:UIViewAnimationOptionCurveEaseInOut
@@ -519,13 +525,22 @@
                          [self layoutIfNeeded];
                      }
                      completion:^(BOOL finished) {
-                         [self checkForJewelsToRemove];
+                         [column replaceObjectAtIndex:[column indexOfObject:aboveJewel] withObject:belowJewel];
+                         [column replaceObjectAtIndex:[column indexOfObject:belowJewel] withObject:aboveJewel];
+                         if (!self.reversing) {
+                             if (![self checkForJewelsToRemove]) {
+                                 self.reversing = YES;
+                                 [self swapAboveJewel:belowJewel withBelowJewel:aboveJewel];
+                             }
+                         } else {
+                             self.reversing = NO;
+                         }
                      }];
 }
 
 #pragma mark - check jewels
 
-- (void)checkForJewelsToRemove
+- (BOOL)checkForJewelsToRemove
 {
     NSMutableSet *jewelsToRemove = [NSMutableSet set];
 
@@ -550,9 +565,15 @@
         }
     }
 
+    if ([jewelsToRemove count] == 0) {
+        return NO;
+    }
+
     for (JewelView *jewelView in jewelsToRemove) {
         [self removeJewel:jewelView];
     }
+
+    return YES;
 }
 
 #pragma mark - jewel attributes
@@ -625,7 +646,7 @@
         return;
     }
 
-    [self swapTopJewel:aboveJewel withBottomJewel:belowJewel];
+    [self swapAboveJewel:aboveJewel withBelowJewel:belowJewel];
 }
 
 - (void)jewelSwipedDownward:(NSNotification *)notification
@@ -637,7 +658,7 @@
         return;
     }
 
-    [self swapTopJewel:aboveJewel withBottomJewel:belowJewel];
+    [self swapAboveJewel:aboveJewel withBelowJewel:belowJewel];
 }
 
 #pragma mark - jewel navigation

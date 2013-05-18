@@ -20,15 +20,22 @@
                                 <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="TDp-Hk-QCY">
+                                <fontDescription key="fontDescription" type="system" pointSize="21"/>
+                                <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="Y9O-z5-axs" firstAttribute="bottom" secondItem="3" secondAttribute="bottom" type="default" id="FwD-GN-U2S"/>
                             <constraint firstItem="Y9O-z5-axs" firstAttribute="leading" secondItem="3" secondAttribute="leading" type="default" id="GVg-Ef-ip3"/>
                             <constraint firstItem="HY3-gk-EC4" firstAttribute="top" secondItem="3" secondAttribute="top" constant="20" symbolic="YES" type="default" id="MXg-cc-ziX"/>
-                            <constraint firstItem="HY3-gk-EC4" firstAttribute="centerX" secondItem="Y9O-z5-axs" secondAttribute="centerX" type="default" id="Ri1-2U-qrx"/>
-                            <constraint firstItem="Y9O-z5-axs" firstAttribute="top" secondItem="3" secondAttribute="top" constant="71" id="aT7-hQ-WQl"/>
+                            <constraint firstAttribute="trailing" secondItem="TDp-Hk-QCY" secondAttribute="trailing" constant="20" symbolic="YES" type="default" id="P8x-mo-FPN"/>
+                            <constraint firstItem="Y9O-z5-axs" firstAttribute="top" secondItem="TDp-Hk-QCY" secondAttribute="bottom" constant="8" symbolic="YES" type="default" id="pHV-Iw-TLa"/>
                             <constraint firstItem="Y9O-z5-axs" firstAttribute="trailing" secondItem="3" secondAttribute="trailing" type="default" id="ppi-Rq-FTg"/>
+                            <constraint firstItem="TDp-Hk-QCY" firstAttribute="top" secondItem="3" secondAttribute="top" constant="46" id="rbK-hA-99L"/>
+                            <constraint firstItem="HY3-gk-EC4" firstAttribute="leading" secondItem="3" secondAttribute="leading" constant="20" symbolic="YES" type="default" id="wuQ-GS-LPV"/>
                         </constraints>
                     </view>
                     <connections>
@@ -37,6 +44,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="4" sceneMemberID="firstResponder"/>
             </objects>
+            <point key="canvasLocation" x="204" y="34"/>
         </scene>
     </scenes>
     <classes>
