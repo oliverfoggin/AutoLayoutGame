@@ -414,12 +414,15 @@
     NSLayoutConstraint *middleAlignmentConstraint;
     NSLayoutConstraint *topAlignmentConstraint;
 
+    NSMutableSet *constraints = [NSMutableSet set];
+
     NSMutableArray *column = [self columnWithJewelView:aboveJewel];
 
     NSUInteger index = [self.jewelColumns indexOfObject:column];
 
     for (NSLayoutConstraint *constraint in [self constraints]) {
-        if (constraint.firstItem == topJewel && constraint.secondItem == aboveJewel) {
+        if (constraint.firstItem == topJewel && constraint.secondItem == aboveJewel
+                && constraint.firstAttribute == NSLayoutAttributeBottom) {
             [self removeConstraint:constraint];
             topSpacingConstraint = [NSLayoutConstraint constraintWithItem:topJewel
                                                                 attribute:NSLayoutAttributeBottom
@@ -428,6 +431,7 @@
                                                                 attribute:NSLayoutAttributeTop
                                                                multiplier:1.0
                                                                  constant:CGRectGetMaxY(topJewel.frame) - CGRectGetMinY(belowJewel.frame)];
+            [constraints addObject:topSpacingConstraint];
         }
 
         if (constraint.firstItem == aboveJewel && constraint.secondItem == belowJewel
@@ -440,6 +444,7 @@
                                                                    attribute:NSLayoutAttributeTop
                                                                   multiplier:1.0
                                                                     constant:CGRectGetMaxY(aboveJewel.frame) - CGRectGetMinY(belowJewel.frame)];
+            [constraints addObject:middleSpacingConstraint];
         }
 
         if (constraint.firstItem == belowJewel && constraint.secondItem == bottomJewel
@@ -452,6 +457,7 @@
                                                             attribute:NSLayoutAttributeTop
                                                            multiplier:1.0
                                                              constant:CGRectGetMaxY(aboveJewel.frame) - CGRectGetMinY(bottomJewel.frame)];
+            [constraints addObject:bottomSpacingConstraint];
         }
 
         if (constraint.firstItem == belowJewel && constraint.secondItem == self
@@ -464,6 +470,7 @@
                                                             attribute:NSLayoutAttributeBottom
                                                            multiplier:1.0
                                                              constant:CGRectGetMaxY(aboveJewel.frame) - CGRectGetMaxY(self.bounds)];
+            [constraints addObject:bottomSpacingConstraint];
         }
 
         if (constraint.firstItem == topJewel && constraint.secondItem == aboveJewel
@@ -476,6 +483,7 @@
                                                                   attribute:NSLayoutAttributeCenterX
                                                                  multiplier:1.0
                                                                    constant:0.0];
+            [constraints addObject:topAlignmentConstraint];
         }
 
         if (constraint.firstItem == aboveJewel && constraint.secondItem == belowJewel
@@ -488,6 +496,7 @@
                                                                      attribute:NSLayoutAttributeCenterX
                                                                     multiplier:1.0
                                                                       constant:0.0];
+            [constraints addObject:middleAlignmentConstraint];
         }
 
         if (constraint.firstItem == belowJewel && constraint.secondItem == bottomJewel
@@ -500,27 +509,24 @@
                                                                      attribute:NSLayoutAttributeCenterX
                                                                     multiplier:1.0
                                                                       constant:0.0];
+            [constraints addObject:bottomAlignmentConstraint];
         }
 
         if (constraint.firstItem == belowJewel && constraint.secondItem == self
-                && constraint.firstAttribute == NSLayoutAttributeCenterX) {
+                && constraint.firstAttribute == NSLayoutAttributeLeft) {
             [self removeConstraint:constraint];
             bottomAlignmentConstraint = [NSLayoutConstraint constraintWithItem:aboveJewel
-                                                                     attribute:NSLayoutAttributeCenterX
+                                                                     attribute:NSLayoutAttributeLeft
                                                                      relatedBy:NSLayoutRelationEqual
-                                                                        toItem:nil
-                                                                     attribute:NSLayoutAttributeNotAnAttribute
+                                                                        toItem:self
+                                                                     attribute:NSLayoutAttributeLeft
                                                                     multiplier:1.0
                                                                       constant:20 + index * ([self columnWidth] + 8)];
+            [constraints addObject:bottomAlignmentConstraint];
         }
     }
 
-    [self addConstraint:topAlignmentConstraint];
-    [self addConstraint:middleAlignmentConstraint];
-    [self addConstraint:bottomAlignmentConstraint];
-    [self addConstraint:bottomSpacingConstraint];
-    [self addConstraint:middleSpacingConstraint];
-    [self addConstraint:topSpacingConstraint];
+    [self addConstraints:[constraints allObjects]];
 
     [column replaceObjectAtIndex:[column indexOfObject:aboveJewel] withObject:belowJewel];
     [column replaceObjectAtIndex:[column indexOfObject:belowJewel] withObject:aboveJewel];
@@ -585,7 +591,7 @@
 
 - (UIColor *)randomColor
 {
-    return self.colours[arc4random_uniform([self.colours count] - 1)];
+    return self.colours[arc4random_uniform([self.colours count])];
 }
 
 #pragma mark - jewel actions
