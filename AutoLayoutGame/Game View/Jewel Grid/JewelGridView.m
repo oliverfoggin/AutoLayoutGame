@@ -29,6 +29,8 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(jewelTapped:) name:JewelTappedNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(jewelSwipedRight:) name:JewelSwipedRightNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(jewelSwipedLeft:) name:JewelSwipedLeftNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(jewelSwipedUpward:) name:JewelSwipedUpwardNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(jewelSwipedDownward:) name:JewelSwipedDownwardNotification object:nil];
 
     [self setupJewels];
 }
@@ -396,18 +398,145 @@
                          [self layoutIfNeeded];
                      }
                      completion:^(BOOL finished) {
-                         [self checkJewelForRemoval:leftJewel];
-                         [self checkJewelForRemoval:rightJewel];
                      }];
 }
 
-- (void)swapTopJewel:(JewelView *)topJewel
-     withBottomJewel:(JewelView *)bottomJewel
+- (void)swapTopJewel:(JewelView *)aboveJewel
+     withBottomJewel:(JewelView *)belowJewel
 {
-    JewelView *aboveJewel = [self jewelAboveJewel:topJewel];
-    JewelView *belowJewel = [self jewelBelowJewel:bottomJewel];
+    JewelView *topJewel = [self jewelAboveJewel:aboveJewel];
+    JewelView *bottomJewel = [self jewelBelowJewel:belowJewel];
 
+    NSLayoutConstraint *bottomSpacingConstraint;
+    NSLayoutConstraint *middleSpacingConstraint;
+    NSLayoutConstraint *topSpacingConstraint;
+    NSLayoutConstraint *bottomAlignmentConstraint;
+    NSLayoutConstraint *middleAlignmentConstraint;
+    NSLayoutConstraint *topAlignmentConstraint;
 
+    NSMutableArray *column = [self columnWithJewelView:aboveJewel];
+
+    NSUInteger index = [self.jewelColumns indexOfObject:column];
+
+    for (NSLayoutConstraint *constraint in [self constraints]) {
+        if (constraint.firstItem == topJewel && constraint.secondItem == aboveJewel) {
+            [self removeConstraint:constraint];
+            topSpacingConstraint = [NSLayoutConstraint constraintWithItem:topJewel
+                                                                attribute:NSLayoutAttributeBottom
+                                                                relatedBy:NSLayoutRelationEqual
+                                                                   toItem:belowJewel
+                                                                attribute:NSLayoutAttributeTop
+                                                               multiplier:1.0
+                                                                 constant:CGRectGetMaxY(topJewel.frame) - CGRectGetMinY(belowJewel.frame)];
+        }
+
+        if (constraint.firstItem == aboveJewel && constraint.secondItem == belowJewel
+                && constraint.firstAttribute == NSLayoutAttributeBottom) {
+            [self removeConstraint:constraint];
+            middleSpacingConstraint = [NSLayoutConstraint constraintWithItem:belowJewel
+                                                                   attribute:NSLayoutAttributeBottom
+                                                                   relatedBy:NSLayoutRelationEqual
+                                                                      toItem:aboveJewel
+                                                                   attribute:NSLayoutAttributeTop
+                                                                  multiplier:1.0
+                                                                    constant:CGRectGetMaxY(aboveJewel.frame) - CGRectGetMinY(belowJewel.frame)];
+        }
+
+        if (constraint.firstItem == belowJewel && constraint.secondItem == bottomJewel
+                && constraint.firstAttribute == NSLayoutAttributeBottom) {
+            [self removeConstraint:constraint];
+            bottomSpacingConstraint = [NSLayoutConstraint constraintWithItem:aboveJewel
+                                                            attribute:NSLayoutAttributeBottom
+                                                            relatedBy:NSLayoutRelationEqual
+                                                               toItem:bottomJewel
+                                                            attribute:NSLayoutAttributeTop
+                                                           multiplier:1.0
+                                                             constant:CGRectGetMaxY(aboveJewel.frame) - CGRectGetMinY(bottomJewel.frame)];
+        }
+
+        if (constraint.firstItem == belowJewel && constraint.secondItem == self
+                && constraint.firstAttribute == NSLayoutAttributeBottom) {
+            [self removeConstraint:constraint];
+            bottomSpacingConstraint = [NSLayoutConstraint constraintWithItem:aboveJewel
+                                                            attribute:NSLayoutAttributeBottom
+                                                            relatedBy:NSLayoutRelationEqual
+                                                               toItem:self
+                                                            attribute:NSLayoutAttributeBottom
+                                                           multiplier:1.0
+                                                             constant:CGRectGetMaxY(aboveJewel.frame) - CGRectGetMaxY(self.bounds)];
+        }
+
+        if (constraint.firstItem == topJewel && constraint.secondItem == aboveJewel
+                && constraint.firstAttribute == NSLayoutAttributeCenterX) {
+            [self removeConstraint:constraint];
+            topAlignmentConstraint = [NSLayoutConstraint constraintWithItem:topJewel
+                                                                  attribute:NSLayoutAttributeCenterX
+                                                                  relatedBy:NSLayoutRelationEqual
+                                                                     toItem:belowJewel
+                                                                  attribute:NSLayoutAttributeCenterX
+                                                                 multiplier:1.0
+                                                                   constant:0.0];
+        }
+
+        if (constraint.firstItem == aboveJewel && constraint.secondItem == belowJewel
+                && constraint.firstAttribute == NSLayoutAttributeCenterX) {
+            [self removeConstraint:constraint];
+            middleAlignmentConstraint = [NSLayoutConstraint constraintWithItem:belowJewel
+                                                                     attribute:NSLayoutAttributeCenterX
+                                                                     relatedBy:NSLayoutRelationEqual
+                                                                        toItem:aboveJewel
+                                                                     attribute:NSLayoutAttributeCenterX
+                                                                    multiplier:1.0
+                                                                      constant:0.0];
+        }
+
+        if (constraint.firstItem == belowJewel && constraint.secondItem == bottomJewel
+                && constraint.firstAttribute == NSLayoutAttributeCenterX) {
+            [self removeConstraint:constraint];
+            bottomAlignmentConstraint = [NSLayoutConstraint constraintWithItem:aboveJewel
+                                                                     attribute:NSLayoutAttributeCenterX
+                                                                     relatedBy:NSLayoutRelationEqual
+                                                                        toItem:bottomJewel
+                                                                     attribute:NSLayoutAttributeCenterX
+                                                                    multiplier:1.0
+                                                                      constant:0.0];
+        }
+
+        if (constraint.firstItem == belowJewel && constraint.secondItem == self
+                && constraint.firstAttribute == NSLayoutAttributeCenterX) {
+            [self removeConstraint:constraint];
+            bottomAlignmentConstraint = [NSLayoutConstraint constraintWithItem:aboveJewel
+                                                                     attribute:NSLayoutAttributeCenterX
+                                                                     relatedBy:NSLayoutRelationEqual
+                                                                        toItem:nil
+                                                                     attribute:NSLayoutAttributeNotAnAttribute
+                                                                    multiplier:1.0
+                                                                      constant:20 + index * ([self columnWidth] + 8)];
+        }
+    }
+
+    [self addConstraint:topAlignmentConstraint];
+    [self addConstraint:middleAlignmentConstraint];
+    [self addConstraint:bottomAlignmentConstraint];
+    [self addConstraint:bottomSpacingConstraint];
+    [self addConstraint:middleSpacingConstraint];
+    [self addConstraint:topSpacingConstraint];
+
+    [column replaceObjectAtIndex:[column indexOfObject:aboveJewel] withObject:belowJewel];
+    [column replaceObjectAtIndex:[column indexOfObject:belowJewel] withObject:aboveJewel];
+
+    [UIView animateWithDuration:0.25
+                          delay:0.0
+                        options:UIViewAnimationOptionCurveEaseInOut
+                     animations:^{
+                         topSpacingConstraint.constant = -8;
+                         middleSpacingConstraint.constant = -8;
+                         bottomSpacingConstraint.constant = -(bottomJewel ? 8 : 20);
+                         [self layoutIfNeeded];
+                     }
+                     completion:^(BOOL finished) {
+
+                     }];
 }
 
 #pragma mark - check jewels
@@ -491,6 +620,30 @@
     }
 
     [self swapLeftJewel:leftJewel withRightJewel:rightJewel];
+}
+
+- (void)jewelSwipedUpward:(NSNotification *)notification
+{
+    JewelView *belowJewel = notification.object;
+    JewelView *aboveJewel = [self jewelAboveJewel:belowJewel];
+
+    if (aboveJewel == nil) {
+        return;
+    }
+
+    [self swapTopJewel:aboveJewel withBottomJewel:belowJewel];
+}
+
+- (void)jewelSwipedDownward:(NSNotification *)notification
+{
+    JewelView *aboveJewel = notification.object;
+    JewelView *belowJewel = [self jewelBelowJewel:aboveJewel];
+
+    if (belowJewel == nil) {
+        return;
+    }
+
+    [self swapTopJewel:aboveJewel withBottomJewel:belowJewel];
 }
 
 #pragma mark - jewel navigation

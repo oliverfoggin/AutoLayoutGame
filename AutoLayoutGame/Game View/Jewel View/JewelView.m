@@ -28,6 +28,14 @@
         [leftSwipeGestureRecognizer setDirection:UISwipeGestureRecognizerDirectionLeft];
         [self addGestureRecognizer:leftSwipeGestureRecognizer];
 
+        UISwipeGestureRecognizer *upSwipeGestureRecognizer = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(swipedUpward)];
+        [upSwipeGestureRecognizer setDirection:UISwipeGestureRecognizerDirectionUp];
+        [self addGestureRecognizer:upSwipeGestureRecognizer];
+
+        UISwipeGestureRecognizer *downSwipeGestureRecognizer = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(swipedDownward)];
+        [downSwipeGestureRecognizer setDirection:UISwipeGestureRecognizerDirectionDown];
+        [self addGestureRecognizer:downSwipeGestureRecognizer];
+
         UITapGestureRecognizer *tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapped)];
         [self addGestureRecognizer:tapGestureRecognizer];
 
@@ -46,7 +54,7 @@
 
 - (void)tapped
 {
-    [[NSNotificationCenter defaultCenter] postNotificationName:JewelTappedNotification object:self];
+//    [[NSNotificationCenter defaultCenter] postNotificationName:JewelTappedNotification object:self];
 }
 
 - (void)swipedRight
@@ -57,6 +65,16 @@
 - (void)swipedLeft
 {
     [[NSNotificationCenter defaultCenter] postNotificationName:JewelSwipedLeftNotification object:self];
+}
+
+- (void)swipedUpward
+{
+    [[NSNotificationCenter defaultCenter] postNotificationName:JewelSwipedUpwardNotification object:self];
+}
+
+- (void)swipedDownward
+{
+    [[NSNotificationCenter defaultCenter] postNotificationName:JewelSwipedDownwardNotification object:self];
 }
 
 @end
