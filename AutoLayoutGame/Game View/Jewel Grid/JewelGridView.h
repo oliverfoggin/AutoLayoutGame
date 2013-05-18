@@ -9,7 +9,6 @@
 
 @interface JewelGridView : UIView
 
-- (void)addJewelView;
-
 - (void)replaceMissingJewels;
+
 @end

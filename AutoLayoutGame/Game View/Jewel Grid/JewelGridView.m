@@ -50,11 +50,6 @@
     }
 }
 
-- (void)addJewelView
-{
-    [self replaceMissingJewels];
-}
-
 - (void)replaceMissingJewels
 {
     for (NSMutableArray *column in self.jewelColumns) {
@@ -77,6 +72,7 @@
     if (index == [jewelColumn count] - 1) {
         [jewelView removeFromSuperview];
         [jewelColumn removeObject:jewelView];
+        [self replaceMissingJewels];
         return;
     } else if (index == 0) {
         next = jewelColumn[1];
@@ -155,8 +151,6 @@
     }
 
     JewelView *jewelView = [[JewelView alloc] initWithColor:[self randomColor]];
-    jewelView.accessibilityIdentifier = [NSString stringWithFormat:@"%d, %d", index, [jewelColumn count] + 1];
-    jewelView.restorationIdentifier = [NSString stringWithFormat:@"%d, %d", index, [jewelColumn count] + 1];
     [self addSubview:jewelView];
 
     NSLayoutConstraint *spacingConstraint;
@@ -172,7 +166,7 @@
                                                             toItem:previous
                                                          attribute:NSLayoutAttributeTop
                                                         multiplier:1.0
-                                                          constant:CGRectGetMinX(previous.frame)];
+                                                          constant:-CGRectGetMinY(previous.frame)];
 
         [self addConstraint:[NSLayoutConstraint constraintWithItem:jewelView
                                                          attribute:NSLayoutAttributeCenterX
@@ -214,12 +208,12 @@
                                                         multiplier:1.0
                                                           constant:-self.frame.size.height];
     }
+    [self addConstraint:spacingConstraint];
 
     [self layoutIfNeeded];
 
     [jewelColumn addObject:jewelView];
 
-    [self addConstraint:spacingConstraint];
 
     [self animateConstraint:previous spacingConstraint:spacingConstraint];
 }

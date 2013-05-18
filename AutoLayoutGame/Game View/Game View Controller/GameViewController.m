@@ -16,11 +16,6 @@
 
 @implementation GameViewController
 
-- (IBAction)addJewelButtonPressed
-{
-    [self.jewelGridView addJewelView];
-}
-
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
