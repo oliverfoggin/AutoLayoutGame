@@ -24,7 +24,7 @@
     self.clipsToBounds = YES;
 
     self.numberOfColumns = 6;
-    self.numberOfRows = 7;
+    self.numberOfRows = 9;
 
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(jewelTapped:) name:JewelTappedNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(jewelSwipedRight:) name:JewelSwipedRightNotification object:nil];
@@ -130,6 +130,7 @@
                      }
                      completion:^(BOOL finished) {
                          [self replaceMissingJewels];
+                         [self checkForJewelsToRemove];
                      }];
 }
 
@@ -205,6 +206,7 @@
                      }
                      completion:^(BOOL finished) {
                          [self replaceMissingJewels];
+                         [self checkForJewelsToRemove];
                      }];
 }
 
@@ -380,6 +382,7 @@
                          [self layoutIfNeeded];
                      }
                      completion:^(BOOL finished) {
+                         [self checkForJewelsToRemove];
                      }];
 }
 
@@ -516,29 +519,39 @@
                          [self layoutIfNeeded];
                      }
                      completion:^(BOOL finished) {
-
+                         [self checkForJewelsToRemove];
                      }];
 }
 
 #pragma mark - check jewels
 
-- (void)checkJewelForRemoval:(JewelView *)jewelView
+- (void)checkForJewelsToRemove
 {
-    JewelView *leftJewel = [self jewelLeftOfJewel:jewelView];
-    JewelView *rightJewel = [self jewelRightOfJewel:jewelView];
-    JewelView *aboveJewel = [self jewelAboveJewel:jewelView];
-    JewelView *belowJewel = [self jewelBelowJewel:jewelView];
+    NSMutableSet *jewelsToRemove = [NSMutableSet set];
 
-    if ([leftJewel.color isEqual:jewelView.color]
-            && [rightJewel.color isEqual:jewelView.color]) {
+    for (NSArray *column in self.jewelColumns) {
+        for (JewelView *jewelView in column) {
+            JewelView *leftJewel = [self jewelLeftOfJewel:jewelView];
+            JewelView *rightJewel = [self jewelRightOfJewel:jewelView];
+            JewelView *aboveJewel = [self jewelAboveJewel:jewelView];
+            JewelView *belowJewel = [self jewelBelowJewel:jewelView];
+
+            if ([leftJewel.color isEqual:jewelView.color]
+                    && [rightJewel.color isEqual:jewelView.color]) {
+                [jewelsToRemove addObject:jewelView];
+                [jewelsToRemove addObject:leftJewel];
+                [jewelsToRemove addObject:rightJewel];
+            } else if ([aboveJewel.color isEqual:jewelView.color]
+                    && [belowJewel.color isEqual:jewelView.color]) {
+                [jewelsToRemove addObject:jewelView];
+                [jewelsToRemove addObject:aboveJewel];
+                [jewelsToRemove addObject:belowJewel];
+            }
+        }
+    }
+
+    for (JewelView *jewelView in jewelsToRemove) {
         [self removeJewel:jewelView];
-        [self removeJewel:leftJewel];
-        [self removeJewel:rightJewel];
-    } else if ([aboveJewel.color isEqual:jewelView.color]
-            && [belowJewel.color isEqual:jewelView.color]) {
-        [self removeJewel:jewelView];
-        [self removeJewel:aboveJewel];
-        [self removeJewel:belowJewel];
     }
 }
 
