@@ -491,8 +491,31 @@
                          [self layoutIfNeeded];
                      }
                      completion:^(BOOL finished) {
-
+                         [self checkJewelForRemoval:leftJewel];
+                         [self checkJewelForRemoval:rightJewel];
                      }];
+}
+
+#pragma mark - check jewels
+
+- (void)checkJewelForRemoval:(JewelView *)jewelView
+{
+    JewelView *leftJewel = [self jewelLeftOfJewel:jewelView];
+    JewelView *rightJewel = [self jewelRightOfJewel:jewelView];
+    JewelView *aboveJewel = [self jewelAboveJewel:jewelView];
+    JewelView *belowJewel = [self jewelBelowJewel:jewelView];
+
+    if ([leftJewel.color isEqual:jewelView.color]
+            && [rightJewel.color isEqual:jewelView.color]) {
+        [self removeJewel:jewelView];
+        [self removeJewel:leftJewel];
+        [self removeJewel:rightJewel];
+    } else if ([aboveJewel.color isEqual:jewelView.color]
+            && [belowJewel.color isEqual:jewelView.color]) {
+        [self removeJewel:jewelView];
+        [self removeJewel:aboveJewel];
+        [self removeJewel:belowJewel];
+    }
 }
 
 #pragma mark - jewel attributes

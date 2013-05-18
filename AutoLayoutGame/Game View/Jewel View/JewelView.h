@@ -15,4 +15,6 @@ static NSString *JewelSwipedLeftNotification = @"JewelSwipedLeftNotification";
 
 - (id)initWithColor:(UIColor *)color;
 
+@property (nonatomic, strong) UIColor *color;
+
 @end

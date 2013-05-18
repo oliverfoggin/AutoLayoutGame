@@ -17,6 +17,7 @@
 {
     self = [super init];
     if (self) {
+        self.color = color;
         self.backgroundColor = color;
 
         UISwipeGestureRecognizer *rightSwipeGestureRecognizer = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(swipedRight)];
