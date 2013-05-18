@@ -54,7 +54,7 @@
 
 - (void)tapped
 {
-    [[NSNotificationCenter defaultCenter] postNotificationName:JewelTappedNotification object:self];
+//    [[NSNotificationCenter defaultCenter] postNotificationName:JewelTappedNotification object:self];
 }
 
 - (void)swipedRight

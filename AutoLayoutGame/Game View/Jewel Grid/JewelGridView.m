@@ -24,7 +24,7 @@
     self.clipsToBounds = YES;
 
     self.numberOfColumns = 6;
-    self.numberOfRows = 9;
+    self.numberOfRows = 7;
 
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(jewelTapped:) name:JewelTappedNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(jewelSwipedRight:) name:JewelSwipedRightNotification object:nil];
