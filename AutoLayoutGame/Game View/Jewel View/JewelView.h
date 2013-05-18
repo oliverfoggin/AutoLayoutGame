@@ -9,6 +9,7 @@
 
 static NSString *JewelTappedNotification = @"JewelTappedNotification";
 static NSString *JewelSwipedRightNotification = @"JewelSwipedRightNotification";
+static NSString *JewelSwipedLeftNotification = @"JewelSwipedLeftNotification";
 
 @interface JewelView : UIView
 

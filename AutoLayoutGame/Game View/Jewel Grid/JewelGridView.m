@@ -27,6 +27,7 @@
 
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(jewelTapped:) name:JewelTappedNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(jewelSwipedRight:) name:JewelSwipedRightNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(jewelSwipedLeft:) name:JewelSwipedLeftNotification object:nil];
 
     [self setupJewels];
 }
@@ -42,14 +43,6 @@
     }
 }
 
-- (void)jewelTapped:(NSNotification *)notification
-{
-    if ([notification.object isKindOfClass:[JewelView class]]) {
-        JewelView *tappedJewel = notification.object;
-        [self removeJewel:tappedJewel];
-    }
-}
-
 - (void)replaceMissingJewels
 {
     for (NSMutableArray *column in self.jewelColumns) {
@@ -60,11 +53,13 @@
     }
 }
 
+#pragma mark - jewel manipulation
+
 - (void)removeJewel:(JewelView *)jewelView
 {
     NSMutableArray *jewelColumn = [self columnWithJewelView:jewelView];
 
-    int index = [jewelColumn indexOfObject:jewelView];
+    NSUInteger index = [jewelColumn indexOfObject:jewelView];
 
     JewelView *next = nil;
     JewelView *previous = nil;
@@ -139,10 +134,19 @@
 
     [self addConstraint:spacingConstraint];
 
-    [self animateConstraint:previous spacingConstraint:spacingConstraint];
+    [UIView animateWithDuration:0.25
+                          delay:0.0
+                        options:UIViewAnimationOptionCurveEaseIn
+                     animations:^{
+                         spacingConstraint.constant = previous ? -8 : -20;
+                         [self layoutIfNeeded];
+                     }
+                     completion:^(BOOL finished) {
+                         [self replaceMissingJewels];
+                     }];
 }
 
-- (void)addJewelViewToColumnIndex:(int)index
+- (void)addJewelViewToColumnIndex:(NSUInteger)index
 {
     NSMutableArray *jewelColumn = self.jewelColumns[index];
 
@@ -214,31 +218,11 @@
 
     [jewelColumn addObject:jewelView];
 
-
-    [self animateConstraint:previous spacingConstraint:spacingConstraint];
-}
-
-- (float)columnWidth
-{
-    return (self.frame.size.width - 40 - (self.numberOfColumns - 1) * 8)/ self.numberOfColumns;
-}
-
-- (UIColor *)randomColor
-{
-    float red = arc4random_uniform(255);
-    float green = arc4random_uniform(255);
-    float blue = arc4random_uniform(255);
-
-    return [UIColor colorWithRed:red/255.0 green:green/255.0 blue:blue/255.0 alpha:1.0];
-}
-
-- (void)animateConstraint:(JewelView *)prev spacingConstraint:(NSLayoutConstraint *)spacingConstraint
-{
     [UIView animateWithDuration:0.25
                           delay:0.0
                         options:UIViewAnimationOptionCurveEaseIn
                      animations:^{
-                         spacingConstraint.constant = prev ? -8 : -20;
+                         spacingConstraint.constant = previous ? -8 : -20;
                          [self layoutIfNeeded];
                      }
                      completion:^(BOOL finished) {
@@ -246,33 +230,12 @@
                      }];
 }
 
-- (NSMutableArray *)columnWithJewelView:(JewelView *)jewelView
+- (void)swapLeftJewel:(JewelView *)leftJewel
+       withRightJewel:(JewelView *)rightJewel
 {
-    for (NSMutableArray *column in self.jewelColumns) {
-        if ([column containsObject:jewelView]) {
-            return column;
-        }
-    }
-    return nil;
-}
-
-- (void)jewelSwipedRight:(NSNotification *)notification
-{
-    JewelView *leftJewel = notification.object;
-
     NSMutableArray *leftColumn = [self columnWithJewelView:leftJewel];
 
-    int columnIndex = [self.jewelColumns indexOfObject:leftColumn];
-
-    if (columnIndex == [self.jewelColumns count] - 1) {
-        return;
-    }
-
-    NSMutableArray *rightColumn = self.jewelColumns[columnIndex + 1];
-
-    JewelView *rightJewel = rightColumn[[leftColumn indexOfObject:leftJewel]];
-
-    int rowIndex = [leftColumn indexOfObject:leftJewel];
+    NSMutableArray *rightColumn = [self columnWithJewelView:rightJewel];
 
     NSLayoutConstraint *leftLeftEdgeConstraint;
     NSLayoutConstraint *rightLeftEdgeConstraint;
@@ -285,6 +248,8 @@
     JewelView *rightPrev = nil;
     JewelView *leftNext = nil;
     JewelView *rightNext = nil;
+
+    NSUInteger rowIndex = [leftColumn indexOfObject:leftJewel];
 
     if ([leftColumn count] == 1) {
 
@@ -495,6 +460,132 @@
                      completion:^(BOOL finished) {
 
                      }];
+}
+
+#pragma mark - jewel attributes
+
+- (float)columnWidth
+{
+    return (self.frame.size.width - 40 - (self.numberOfColumns - 1) * 8)/ self.numberOfColumns;
+}
+
+- (UIColor *)randomColor
+{
+    float red = arc4random_uniform(255);
+    float green = arc4random_uniform(255);
+    float blue = arc4random_uniform(255);
+
+    return [UIColor colorWithRed:red/255.0 green:green/255.0 blue:blue/255.0 alpha:1.0];
+}
+
+#pragma mark - jewel actions
+
+- (void)jewelTapped:(NSNotification *)notification
+{
+    if ([notification.object isKindOfClass:[JewelView class]]) {
+        JewelView *tappedJewel = notification.object;
+        [self removeJewel:tappedJewel];
+    }
+}
+
+- (void)jewelSwipedRight:(NSNotification *)notification
+{
+    JewelView *leftJewel = notification.object;
+    JewelView *rightJewel = [self jewelRightOfJewel:leftJewel];
+
+    if (rightJewel == nil) {
+        return;
+    }
+
+    [self swapLeftJewel:leftJewel withRightJewel:rightJewel];
+}
+
+- (void)jewelSwipedLeft:(NSNotification *)notification
+{
+    JewelView *rightJewel = notification.object;
+    JewelView *leftJewel = [self jewelLeftOfJewel:rightJewel];
+
+    if (leftJewel == nil) {
+        return;
+    }
+
+    [self swapLeftJewel:leftJewel withRightJewel:rightJewel];
+}
+
+#pragma mark - jewel navigation
+
+- (NSMutableArray *)columnWithJewelView:(JewelView *)jewelView
+{
+    for (NSMutableArray *column in self.jewelColumns) {
+        if ([column containsObject:jewelView]) {
+            return column;
+        }
+    }
+    return nil;
+}
+
+- (JewelView *)jewelLeftOfJewel:(JewelView *)jewelView
+{
+    NSArray *column = [self columnWithJewelView:jewelView];
+
+    NSUInteger columnIndex = [self.jewelColumns indexOfObject:column];
+
+    if (columnIndex == 0) {
+        return nil;
+    }
+
+    NSArray *leftColumn = self.jewelColumns[columnIndex - 1];
+
+    JewelView *leftJewel = leftColumn[[column indexOfObject:jewelView]];
+
+    return leftJewel;
+}
+
+- (JewelView *)jewelRightOfJewel:(JewelView *)jewelView
+{
+    NSArray *column = [self columnWithJewelView:jewelView];
+
+    NSUInteger columnIndex = [self.jewelColumns indexOfObject:column];
+
+    if (columnIndex == self.numberOfColumns - 1) {
+        return nil;
+    }
+
+    NSArray *rightColumn = self.jewelColumns[columnIndex + 1];
+
+    JewelView *rightJewel = rightColumn[[column indexOfObject:jewelView]];
+
+    return rightJewel;
+}
+
+- (JewelView *)jewelAboveJewel:(JewelView *)jewelView
+{
+    NSArray *column = [self columnWithJewelView:jewelView];
+
+    NSUInteger rowIndex = [column indexOfObject:jewelView];
+
+    if (rowIndex == self.numberOfRows - 1) {
+        return nil;
+    }
+
+    JewelView *aboveJewel = column[rowIndex + 1];
+
+    return aboveJewel;
+}
+
+- (JewelView *)jewelBelowJewel:(JewelView *)jewelView
+{
+    NSArray *column = [self columnWithJewelView:jewelView];
+
+    NSUInteger rowIndex = [column indexOfObject:jewelView];
+
+    if (rowIndex == 0) {
+        return nil;
+    }
+
+    JewelView *belowJewel = column[rowIndex - 1];
+
+    return belowJewel;
 }
 
 @end
