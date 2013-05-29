@@ -40,6 +40,7 @@
                     </view>
                     <connections>
                         <outlet property="jewelGridView" destination="Y9O-z5-axs" id="SqW-J0-o3H"/>
+                        <outlet property="scoreLabel" destination="TDp-Hk-QCY" id="tPO-5r-yZB"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="4" sceneMemberID="firstResponder"/>
@@ -52,6 +53,7 @@
             <source key="sourceIdentifier" type="project" relativePath="./Classes/GameViewController.h"/>
             <relationships>
                 <relationship kind="outlet" name="jewelGridView" candidateClass="JewelGridView"/>
+                <relationship kind="outlet" name="scoreLabel" candidateClass="UILabel"/>
             </relationships>
         </class>
         <class className="JewelGridView" superclassName="UIView">

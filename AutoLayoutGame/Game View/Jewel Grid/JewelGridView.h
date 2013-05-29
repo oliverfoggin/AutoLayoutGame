@@ -7,8 +7,16 @@
 
 #import <Foundation/Foundation.h>
 
+@protocol JewelGridDelegate <NSObject>
+
+- (void)removedJewels:(NSUInteger)numberOfJewelsRemoved;
+
+@end
+
 @interface JewelGridView : UIView
 
 - (void)replaceMissingJewels;
+
+@property (nonatomic, weak) id <JewelGridDelegate> delegate;
 
 @end

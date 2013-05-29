@@ -26,7 +26,7 @@
 
     self.reversing = NO;
 
-    self.numberOfColumns = 6;
+    self.numberOfColumns = 8;
     self.numberOfRows = 9;
 
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(jewelTapped:) name:JewelTappedNotification object:nil];
@@ -569,6 +569,8 @@
         return NO;
     }
 
+    [self.delegate removedJewels:[jewelsToRemove count]];
+
     for (JewelView *jewelView in jewelsToRemove) {
         [self removeJewel:jewelView];
     }
@@ -670,6 +672,7 @@
             return column;
         }
     }
+
     return nil;
 }
 
